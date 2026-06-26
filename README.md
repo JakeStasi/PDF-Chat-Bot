@@ -1,3 +1,9 @@
+
+
+https://github.com/user-attachments/assets/0d606329-6de2-449d-86f5-56488ec9cb0f
+
+
+
 I wanted to create a PDF chatbot that can read in the documents I give it and the help summarize the document and then give specific answers about the document when I ask it questions. I found myself using an online website that does this and I wanted to build my own.
 I used a basic html stlying, ChatGPT API for my llm, and LangChain for this project. 
 
