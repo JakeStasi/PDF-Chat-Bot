@@ -16,19 +16,21 @@ def setup_qa_system(file_path):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     chunks = text_splitter.split_documents(docs)
 
-    # Converts chunks into embeddings which are numerical representations of the words so the computer can work with them
+    # Converts chunks into embeddings which are numerical representations of the words, where each chunk "basketball is played 10 players on the court..."
+    # is converted to a embedding [1,.4,.6,.8,1.2] where the numbers represent what the words mean
     embeddings = OpenAIEmbeddings()
 
-    #Store the different chunk embeddings into a vector database
+    # Stores the different chunk embeddings into a vector database called FAISS which can store these embeddings and quickly look up semantically similar embeddings
     vector_store = FAISS.from_documents(chunks, embeddings)
 
-    # Searches the vector store to find chunks that are similar to the question
+    # Searches the vector database FAISS to find chunks that are similar to the question
+    # and then later it is given to the LLM to use as context so it can better answer the user's question
     retriever = vector_store.as_retriever()
 
     # Creates the Open AI LLM 
     llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
 
-    # This creates the RAG Chain which retrieves the relevant chunks and prompts the LLM to answer the user's question with the chunks as context so it can better answer the question 
+    # This creates the Retrieval-Augmented Generation Chain which retrieves the relevant chunks and prompts the LLM to answer the user's question with the chunks as context so it can better answer the question 
     qa_chain = RetrievalQA.from_chain_type(llm, retriever=retriever)
 
     return qa_chain
